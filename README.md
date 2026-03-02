@@ -56,7 +56,7 @@ The -k in ApacheBench commands is optional.
 
 ## Known Issues
 
-- Without the fullfillment of all the requirements, functions like log rotation may not work accordingly.
+- Without the fullfillment of all the requirements, functions like log rotation may not work accordingly;
 - The project cannot regenerate [server.conf](server.conf) in case of file corruption and has to be manually added again.
 
 ## References
