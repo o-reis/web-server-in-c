@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>401 | Access Denied</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0a0a0a;
+            --text-main: #e5e5e5;
+            --text-muted: #737373;
+            --accent-red: #dc2626;
+            --accent-red-glow: rgba(220, 38, 38, 0.4);
+            --panel-bg: rgba(20, 20, 20, 0.8);
+            --border: #333;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            /* Subtle grid background */
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 3rem 2rem;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Red glow line at top */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-red);
+            box-shadow: 0 0 15px var(--accent-red);
+        }
+
+        .icon-container {
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .lock-icon {
+            color: var(--accent-red);
+            width: 80px;
+            height: 80px;
+            animation: shake 2.5s ease-in-out infinite;
+        }
+
+        /* Scanner beam effect */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-red);
+            opacity: 0.5;
+            animation: scan 2s linear infinite;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -2px;
+            color: white;
+            text-shadow: 0 0 20px var(--accent-red-glow);
+        }
+
+        h2 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-red);
+            margin: 0.5rem 0 1.5rem 0;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: transparent;
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 0.8rem 2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            border-color: var(--accent-red);
+            color: white;
+            box-shadow: 0 0 15px var(--accent-red-glow);
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .fingerprint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--accent-red-glow) 0%, transparent 70%);
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            90% { transform: rotate(0deg); }
+            92% { transform: rotate(-5deg); }
+            94% { transform: rotate(5deg); }
+            96% { transform: rotate(-5deg); }
+            98% { transform: rotate(5deg); }
+        }
+        
+        /* Glitch effect on hover */
+        .glitch-wrapper:hover h1 {
+            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        .meta {
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #444;
+            border-top: 1px solid #222;
+            padding-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="fingerprint"></div>
+
+    <div class="container">
+        <div class="card glitch-wrapper">
+            <div class="icon-container">
+                <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <div class="scan-line"></div>
+            </div>
+
+            <h1>401</h1>
+            <h2>Unauthorized Access</h2>
+
+            <p>
+                Protocol VIOLATION detected.<br>
+                Your credentials were rejected by the system.<br>
+                This incident has been logged.
+            </p>
+
+            <a href="/" class="btn">Return to Safety</a>
+
+            <div class="meta">
+                <span>ERR_CODE: INVALID_TOKEN</span>
+                <span id="ip-display">IP: ::1</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Simple script to show "real" IP or random data
+        // Just adds a bit of "terminal" flavor
+        const hexChars = "0123456789ABCDEF";
+        function randomHex(len) {
+            let s = "";
+            for (let i = 0; i < len; i++) {
+                s += hexChars[Math.floor(Math.random() * 16)];
+            }
+            return s;
+        }
+        
+        document.getElementById('ip-display').innerText = `ID: ${randomHex(4)}-${randomHex(4)}`;
+    </script>
+</body>
+</html>

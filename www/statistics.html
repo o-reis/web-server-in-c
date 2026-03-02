@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Statistics | Terminal View</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #050505;
+            --text-main: #e5e5e5;
+            --text-muted: #737373;
+            --panel-bg: rgba(20, 20, 20, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            
+            /* Status Colors */
+            --col-success: #22c55e; /* 200 */
+            --col-warn: #eab308;    /* 404 */
+            --col-error: #ef4444;   /* 500 */
+            --col-fatal: #ec4899;   /* 503 */
+            --col-info: #3b82f6;    /* Info */
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, transparent 70%);
+        }
+
+        /* Utilities */
+        .w-full { width: 100%; }
+        .max-w-5xl { max-width: 64rem; }
+        .grid { display: grid; gap: 1.5rem; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .text-xs { font-size: 0.75rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-4xl { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.05em; }
+        .font-bold { font-weight: 700; }
+        .uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
+        .text-muted { color: var(--text-muted); }
+
+        /* Panel Styling */
+        .glass-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Hero Cards */
+        .hero-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 160px;
+        }
+
+        .icon-bg {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            opacity: 0.05;
+            transform: rotate(-15deg);
+        }
+
+        /* Distribution Bar */
+        .dist-bar-container {
+            height: 24px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            display: flex;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        
+        .dist-segment {
+            height: 100%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .col-span-2 {
+                grid-column: span 2;
+            }
+        }
+
+        /* Header Status */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 99px;
+            color: var(--col-success);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* SVG Icons */
+        svg { width: 100%; height: 100%; }
+
+    </style>
+</head>
+<body>
+
+    <div class="w-full max-w-5xl">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-sm text-muted uppercase tracking-wider mb-1">System Telemetry</h1>
+                <div class="text-xl font-bold flex items-center gap-3">
+                    <span id="hostname-display">SYSTEM</span>
+                    <div class="status-badge">
+                        <div class="pulse-dot"></div>
+                        ONLINE
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <!-- Replaced misleading uptime with a simple monitoring status -->
+                <div class="text-xs text-muted">Status: Live Monitoring</div>
+                <div class="text-xs text-muted" id="last-updated">Initializing...</div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="grid dashboard-grid">
+            
+            <!-- Hero Card: Total Requests -->
+            <div class="glass-panel hero-card" style="border-top: 2px solid var(--col-info);">
+                <div style="width: 120px; height: 120px;" class="icon-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+                <div>
+                    <span class="text-xs uppercase text-muted font-bold">Total Requests</span>
+                </div>
+                <div>
+                    <div id="total-requests" class="text-4xl" style="color: var(--col-info);">0</div>
+                    <div class="text-xs text-muted mt-2">Lifetime traffic count</div>
+                </div>
+            </div>
+
+            <!-- Hero Card: Bytes -->
+            <div class="glass-panel hero-card" style="border-top: 2px solid var(--col-success);">
+                <div style="width: 120px; height: 120px;" class="icon-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+                </div>
+                <div>
+                    <span class="text-xs uppercase text-muted font-bold">Data Transferred</span>
+                </div>
+                <div>
+                    <div id="bytes-transferred" class="text-4xl" style="color: var(--col-success);">0 B</div>
+                    <div class="text-xs text-muted mt-2">Total throughput</div>
+                </div>
+            </div>
+
+            <!-- Full Width: Response Distribution -->
+            <div class="glass-panel col-span-2">
+                <div class="flex justify-between items-end mb-2">
+                    <span class="text-xs uppercase text-muted font-bold">Response Code Distribution</span>
+                    <span class="text-xs text-muted" id="total-percent">Calculating...</span>
+                </div>
+
+                <!-- Visual Bar -->
+                <div class="dist-bar-container">
+                    <div id="bar-200" class="dist-segment" style="width: 100%; background: var(--col-success);"></div>
+                    <div id="bar-404" class="dist-segment" style="width: 0%; background: var(--col-warn);"></div>
+                    <div id="bar-500" class="dist-segment" style="width: 0%; background: var(--col-error);"></div>
+                    <div id="bar-503" class="dist-segment" style="width: 0%; background: var(--col-fatal);"></div>
+                </div>
+
+                <!-- Legend / Stats -->
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <div class="dot" style="background: var(--col-success);"></div>
+                        <span class="text-muted flex-1">200 OK</span>
+                        <span class="font-bold" id="status-200">0</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="dot" style="background: var(--col-warn);"></div>
+                        <span class="text-muted flex-1">404 Not Found</span>
+                        <span class="font-bold" id="status-404">0</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="dot" style="background: var(--col-error);"></div>
+                        <span class="text-muted flex-1">500 Server Error</span>
+                        <span class="font-bold" id="status-500">0</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="dot" style="background: var(--col-fatal);"></div>
+                        <span class="text-muted flex-1">503 Unavailable</span>
+                        <span class="font-bold" id="status-503">0</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Refresh Footer -->
+        <div class="mt-8 flex justify-center">
+            <div class="text-xs text-muted bg-white/5 px-4 py-2 rounded-full border border-white/5 flex items-center gap-2">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                Auto-refresh in <span id="countdown" class="text-white font-bold">2</span>s
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set dynamic hostname if available, else default
+        document.getElementById('hostname-display').textContent = window.location.hostname.toUpperCase() || "TERMINAL";
+
+        // Data Store
+        let stats = {
+            s200: 0, s404: 0, s500: 0, s503: 0,
+            bytes: 0, total: 0
+        };
+
+        const fmt = (n) => new Intl.NumberFormat().format(n);
+        const fmtBytes = (bytes) => {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        };
+
+        function updateDisplay() {
+            // Update Text
+            document.getElementById('total-requests').textContent = fmt(stats.total);
+            document.getElementById('bytes-transferred').textContent = fmtBytes(stats.bytes);
+            document.getElementById('status-200').textContent = fmt(stats.s200);
+            document.getElementById('status-404').textContent = fmt(stats.s404);
+            document.getElementById('status-500').textContent = fmt(stats.s500);
+            document.getElementById('status-503').textContent = fmt(stats.s503);
+            
+            document.getElementById('last-updated').textContent = `Sync: ${new Date().toLocaleTimeString()}`;
+
+            // Update Visualization Bars
+            // Denominator: Use total requests count to represent all traffic
+            const total = stats.total || 1; 
+            
+            if (stats.total > 0) {
+                const p200 = (stats.s200 / total) * 100;
+                const p404 = (stats.s404 / total) * 100;
+                const p500 = (stats.s500 / total) * 100;
+                const p503 = (stats.s503 / total) * 100;
+
+                document.getElementById('bar-200').style.width = `${p200}%`;
+                document.getElementById('bar-404').style.width = `${p404}%`;
+                document.getElementById('bar-500').style.width = `${p500}%`;
+                document.getElementById('bar-503').style.width = `${p503}%`;
+                
+                const reliability = p200;
+                
+                // Color code reliability text
+                const relEl = document.getElementById('total-percent');
+                relEl.textContent = `${reliability.toFixed(2)}% Reliability`;
+                
+                if(reliability < 99) relEl.style.color = 'var(--col-warn)';
+                if(reliability < 90) relEl.style.color = 'var(--col-error)';
+                else relEl.style.color = 'var(--col-success)';
+            } else {
+                document.getElementById('total-percent').textContent = "No Data";
+            }
+        }
+
+        // --- API Integration Logic ---
+
+        function applyData(data) {
+             stats.total = data.total_requests;
+             stats.s200 = data.status_200;
+             stats.s404 = data.status_404;
+             stats.s500 = data.status_500;
+             stats.s503 = data.status_503;
+             stats.bytes = data.bytes_transferred;
+             updateDisplay();
+        }
+
+        async function pollStats() {
+            try {
+                // Fetching from the API with cache-busting timestamp
+                const response = await fetch(`/api/stats`);
+                if (response.ok) {
+                    const data = await response.json();
+                    applyData(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch stats:", error);
+                document.getElementById('last-updated').textContent = "Connection Lost";
+            }
+        }
+
+        // Initial fetch
+        pollStats();
+
+        // 2-second polling interval (API approach)
+        setInterval(pollStats, 2000);
+
+        // Simple countdown for visual effect (resets every 2s to match poll)
+        let timeLeft = 2;
+        const timerEl = document.getElementById('countdown');
+        setInterval(() => {
+            timeLeft--;
+            timerEl.textContent = timeLeft;
+            if (timeLeft <= 0) timeLeft = 2;
+        }, 1000);
+
+    </script>
+</body>
+</html>

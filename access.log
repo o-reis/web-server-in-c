@@ -1,0 +1,51 @@
+[20/Dec/2025:13:26:41 +0000] Server starting!
+127.0.0.1 - - [20/Dec/2025:13:30:29 +0000] "GET / HTTP/1.1" 200 42551
+[20/Dec/2025:13:36:24 +0000] Server closing!
+[20/Dec/2025:13:37:11 +0000] Server starting!
+[20/Dec/2025:13:37:11 +0000] Server closing!
+[20/Dec/2025:16:36:04 +0000] Server starting!
+[20/Dec/2025:16:36:05 +0000] Server closing!
+[20/Dec/2025:17:08:25 +0000] Server starting!
+127.0.0.1 - - [20/Dec/2025:17:08:39 +0000] "GET / HTTP/1.1" 200 42551
+127.0.0.1 - - [20/Dec/2025:17:09:04 +0000] "GET /admin HTTP/1.1" 401 7122
+127.0.0.1 - - [20/Dec/2025:17:09:13 +0000] "GET /rerwerwer HTTP/1.1" 404 878
+127.0.0.1 - - [20/Dec/2025:17:09:13 +0000] "GET /errors/notfound.css HTTP/1.1" 200 2311
+127.0.0.1 - - [20/Dec/2025:17:09:20 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:26 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:26 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:27 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:27 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:27 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:27 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:27 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:27 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:28 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:28 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:28 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:28 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:28 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:28 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:28 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:28 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:29 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:29 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:29 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:29 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:29 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:29 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:29 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:30 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:30 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:30 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:30 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:30 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:30 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:30 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:30 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:30 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:31 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:31 +0000] "GET /statistics.html HTTP/1.1" 200 14857
+127.0.0.1 - - [20/Dec/2025:17:09:40 +0000] "GET /miau.png HTTP/1.1" 200 59056
+127.0.0.1 - - [20/Dec/2025:17:09:47 +0000] "GET /lusiadas.pdf HTTP/1.1" 200 2325464
+127.0.0.1 - - [20/Dec/2025:17:09:47 +0000] "GET /favicon.ico HTTP/1.1" 200 0
+[20/Dec/2025:17:10:16 +0000] Server closing!
